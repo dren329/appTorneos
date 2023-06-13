@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"> 	
+		<link rel="stylesheet" href="./estilos.css">
+		<title> Torneos Krigerskole</title>
+
+	</head>
+	<body>
+		<button type="button" id="btnCrearTor" class="btnTitulo">Crear torneo</button>
+		<button type="button" id="btnVerTor" class="btnTitulo">Ver torneos</button>
+		<button type="button" id="btnCrVerGrupos" class="btnTitulo">Crear / Ver grupos</button>
+		<button type="button" id="btnCrVerCombates" class="btnTitulo">Crear / Ver Combates</button>
+		<h1 id="tituloTorneo">Seleccionar torneo<H1>
+		<section id="idVistaCentral"></section>
+		<!--
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<section id="secCrearTorneo">
+			<form id="formCrearTorneo">
+			 <div class="parInpt">
+				 <label for="inpTorneoNombre">Nombre del Torneo: </label>
+				 <input id="inpTorneoNombre" placeholder="Nombre" />
+			 </div>
+
+			 <div class="parInpt">
+				 <label for="inpTamanoGrupo">Tamaño de Grupo: </label>
+				 <input id="inpTamanoGrupo" placeholder="Tamaño del Grupo" />
+			 </div>
+
+			 <fieldset class="fieldset">
+				 <legend>Estilo de Puntaje</legend>
+				  <div class="parInpRadio">
+					<input type="radio" id="inpTorneoTipoCombates" name="estiloPuntaje" value="combates" />
+					<label for="inpTorneoTipoCombates">Combates</label>
+				  </div>
+				  <div class="parInpRadio">
+					<input type="radio" id="inpTorneoTipoPuntos" name="estiloPuntaje" value="puntos" />
+					<label for="inpTorneoTipoPuntos">Puntaje </label>
+				  </div>
+			 </fieldset>
+			 <div class="parBtnAceCan">
+			  <button type="button" class="btnCancelar">Cancelar</button>
+			  <button type="button" class="btnAceptar">Aceptar</button>
+			 </div>
+			</form>
+
+		</section>
+		--!>
+
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<section id="secAddParticipante">
+			<form id="formAddParticipante">
+			 <div class="parInpt">
+				 <label for="inpParticipanteNombre">Nombre del Participante: </label>
+				 <input id="inpParticipanteNombre" placeholder="Nombre" />
+			 </div>
+
+			 <fieldset class="fieldset">
+				 <legend>Escuela</legend>
+				  <div class="parInpRadio">
+					<input type="radio" id="inpRadioKrigerskole" name="escuela" value="krigerskole" />
+					<label for="inpRadioKrigerskole">Krigerskole</label>
+				  </div>
+				  <div class="parInpRadio">
+					<input type="radio" id="inpRadioScorpius" name="escuela" value="scorpius" />
+					<label for="inpRadioScorpius">Scorpius</label>
+				  </div>
+				  <div class="parInpRadio">
+					<input type="radio" id="inpRadioOtraEscuela" name="escuela" value="null" />
+					<label for="inpRadioOtraEscuela">Otro: </label>
+					<input id="inpOtraEscuela" placeholder="Ingresar Nombre de Escuela"/>
+				  </div>
+			 </fieldset>
+
+			 <div class="divChecks">
+			 	<fieldset class="fieldset">
+					<legend>Seleccionar Torneos: </legend>
+					<div class="parInpCheckbox">
+						<label for="inpCheckTorneo1"><input type="checkbox" id="inpCheckTorneo1" value="torneo1"/> Torneo gen1 </label>
+						<label for="inpCheckTorneo2"><input type="checkbox" id="inpCheckTorneo2" value="torneo2"/> Torneo gen2 </label>
+					</div>
+				</fieldset>
+			 </div>
+
+			 <div class="parBtnAceCan">
+			  <button type="button" class="btnCancelar">Cancelar</button>
+			  <button type="button" class="btnAceptar">Aceptar</button>
+			 </div>
+			</form>
+
+		</section>
+		<!--
+		<section id="listaParticipantes"></section>
+		<section id="listaCombates"></section>
+		<section id="combatesGrupo"></section>
+		--!>
+
+			
+
+	 <script type="text/javacript" src="./arrTablas.js"></script>
+	 <script type="text/javascript" src="./index.js"></script>
+	</body>
+</html>
