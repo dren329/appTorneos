@@ -9,6 +9,42 @@ table {
 	border: 2px solid black;
 }
 
+#divEditarTorneoSup{
+	display: flex;
+}
+
+#secEditarTorneoInfo{
+	margin: 5px;
+	padding: 2px;
+	border: 3px solid black;
+	border-radius: 5px;
+}
+
+#secEditarTorneoAddParticipante{
+	margin: 5px;
+	padding: 2px;
+	border: 3px solid black;
+	border-radius: 5px;
+}
+
+#divEditarTorneoMed{
+	display: flex;
+}
+
+#secEditarTorneoLsParticipantes{
+	margin: 5px;
+	padding: 2px;
+	border: 3px solid black;
+	border-radius: 5px;
+}
+
+#secEditarTorneoLsGrupos{
+	margin: 5px;
+	padding: 2px;
+	border: 3px solid black;
+	border-radius: 5px;
+}
+
 #listaCombates{
 	margin: 10px;
 	max-width: 95%;
@@ -17,3 +53,4 @@ table {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 }
+
