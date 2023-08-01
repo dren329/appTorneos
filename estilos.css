@@ -9,6 +9,21 @@ table {
 	border: 2px solid black;
 }
 
+/* -------------------- Clases Generales */
+
+tr:hover{
+	background-color: #DDDDDD;
+}
+
+#tituloKrigerskole{
+	border: 3px solid black;
+}
+
+#tituloKrigerskole:hover{
+	background-color: Blue;
+	color: white;
+}
+
 #divEditarTorneoSup{
 	display: flex;
 }
@@ -29,6 +44,7 @@ table {
 
 #divEditarTorneoMed{
 	display: flex;
+	flex-direction: column;
 }
 
 #secEditarTorneoLsParticipantes{
@@ -54,3 +70,38 @@ table {
 	grid-template-columns: 1fr 1fr 1fr;
 }
 
+#secCombate{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#divParticipantes{
+	display: flex;
+	justify-content: space-around;
+	width: 90%;
+}
+
+.divPuntos{
+	padding: 5px;
+}
+
+#divParticipante1{
+	display: flex;
+	flex-direction: column;
+	background-color: #254DDF;
+	border: 3px solid black;
+	border-radius: 5px;
+}
+
+#divParticipante2{
+	display: flex;
+	flex-direction: column;
+	background-color: #FF3A30;
+	border: 3px solid black;
+	border-radius: 5px;
+}
+
+.btnPuntos{
+	margin: 3px;
+}

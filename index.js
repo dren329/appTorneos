@@ -68,6 +68,82 @@ const lsTorneos = [
 ]
 const tablaGrupos = []
 
+function fnAuxVistaCombate(){
+	const auxVista = `
+	<section id="secCombate">
+		<div id="divContadorTiempo">
+			<p>Tiempo:</p>
+			<p id="pTemporizador">Iniciar</p>
+
+		</div>
+		<button type="button" id="btnDoble">Doble</button>
+		<div id="divParticipantes">
+			<div id="divParticipante1">
+				<div class="divPuntos">
+					<p>Puntos:</p>
+					<p id="pPuntosP1">3</p>
+				</div>
+				<button type="button" class="btnPuntos">+3 Puntos</button>
+				<button type="button" class="btnPuntos">+2 Puntos</button>
+				<button type="button" class="btnPuntos">+1 punto</button>
+				<button type="button" class="btnPuntos">Penalización</button>
+			</div>
+			<div id="divHistorialCombate">
+				<p>Historial:</p>
+				<div id="divAuxListahistorial">
+					<p class="pAccionCombate"> Azul +3 puntos </p>
+					<p class="pAccionCombate">1er Doble</p>
+					<p class="pAccionCombate">Rojo +3 puntos</p>
+					<p class="pAccionCombate">2do Doble</p>
+					<p class="pAccionCombate">Azul +1 punto</p>
+					<p class="pAccionCombate">Azul -1 punto</p>
+				</div>
+			</div>
+			<div id="divParticipante2">
+				<div class="divPuntos">
+					<p>Puntos:</p>
+					<p id="pPuntosP1">3</p>
+				</div>
+				<button type="button" class="btnPuntos">+3 Puntos</button>
+				<button type="button" class="btnPuntos">+2 Puntos</button>
+				<button type="button" class="btnPuntos">+1 punto</button>
+				<button type="button" class="btnPuntos">Penalización</button>
+			</div>
+		</div>
+	</section>
+	`
+	document.querySelector('#idVistaCentral').innerHTML = auxVista
+	timerCombate()
+}
+
+function timerCombate(){
+	let tiempo = 180
+	let intervalo
+
+	function vistaContador(auxTiempo){
+		const minutos = Math.floor(auxTiempo/60)
+		const segundos = auxTiempo % 60
+		document.querySelector("#pTemporizador").textContent = `${minutos}:${segundos}`
+	}
+
+	// document.querySelector("#btnInicio").addEventListener('click', 
+	function iniciar(){
+		intervalo = setInterval( function(){
+			tiempo--
+			console.log(tiempo)
+			
+			if(tiempo === 0){ fin() }
+			vistaContador(tiempo)
+		}, 1000)
+	}
+	
+	function pausar(){clearInterval(intervalo)}
+
+	function fin(){ alert('Ultimo Intercambio') }
+	
+	iniciar()
+}
+
 function fnAddParticipante(auxIdTorneo){
 console.log(auxIdTorneo)
 	const auxNombrePart = document.querySelector('#inpParticipanteNombre').value
@@ -234,18 +310,39 @@ function verCombatesGrupo(auxArrGrupo, auxDomInp = '#idVistaCentral') {
 	auxDom.innerHTML = auxVista
 }
 
-function verTodosCombatesGrupo(auxArrGrupo, auxDomInp = '#idVistaCentral') {
+function verTodosCombatesGrupo(auxArrGrupos, auxDomInp = '#idVistaCentral') {
+const auxDom = document.querySelector(auxDomInp)
+const vistaIdeal = [
+	[{ p1Nombre: 'juan', p1puntos:0,dobles: 0, penalizaciones: 0},
+	 { p2Nombre: 'scorpius', p2puntos:0,dobles:0,penalizaciones:0}
+	],
+	[{ p1Nombre: 'juan', p1puntos:0,dobles: 0, penalizaciones: 0},
+	 { p2Nombre: 'scorpius', p2puntos:0,dobles:0,penalizaciones:0}
+	],
+	[{ p1Nombre: 'juan', p1puntos:0,dobles: 0, penalizaciones: 0},
+	 { p2Nombre: 'scorpius', p2puntos:0,dobles:0,penalizaciones:0}
+	],
+]
 
-	const auxDom = document.querySelector(auxDomInp)
-	const auxArrData = auxArrGrupo[0].map( (ele) => {
-		return [{p1nombre: ele.p1.nombre, p2nombre: ele.p2.nombre}]
-	})
 
+const auxVista = auxArrGrupos.reduce( (tablaFinal, grupo, i) =>{
 
-	const auxVista = auxArrData.reduce( (acc, ele, i) => {
-		return acc + auxCrearTabla(ele, 'tbCombate', `Combate: ${i+1}`)
-	},'')
-	auxDom.innerHTML = auxVista
+	const tablaGrupo = grupo.reduce( ( accTablaGrupo, combate, ic) =>{
+
+		const auxObjToArr = [
+			{p1: combate.p1.nombre, p1puntos:1, p1dobles:2},
+			{p2: combate.p2.nombre, p2puntos:0, p2dobles:2}
+		]
+
+		accTablaGrupo.push({tb: auxCrearTabla(auxObjToArr, 'tbCombate', '',['Nombre', 'puntos', 'dobles'] )})
+
+		return accTablaGrupo
+	}, [])
+
+	return tablaFinal + auxCrearTabla(tablaGrupo, 'tbGrupo', `Grupo: ${i+1}`)
+}, '')
+
+	auxDom.innerHTML = auxVista 
 }
 
 function verTorneo(id){
@@ -358,6 +455,10 @@ function editarTorneo(id){
 	 verTodosCombatesGrupo(auxTorneo.combates, '#secEditarTorneoLsCombates')
 
 
+	const auxIrClickCombate = document.querySelectorAll('.tbCombate')
+	auxIrClickCombate.forEach( ele =>{
+		ele.addEventListener('click', () => {fnAuxVistaCombate()})
+	})
 	}) // btnOrganizarGrupos
 
 
@@ -365,7 +466,11 @@ function editarTorneo(id){
 	console.log(auxTorneo)
 	auxTorneo.combates = fnCombatesGrupos([...auxTorneo.grupos])
 	verCombatesGrupo(auxTorneo.combates, '#secEditarTorneoLsGrupos')
+
+
+
 	})
+
 
 	document.querySelector('#btnGruposAceptar').addEventListener('click', (() => {auxTorneo.grupos = grupos}))
 
@@ -439,6 +544,7 @@ const fnAsignarGrupos = (inpArrParticipantes, tamGrupo) => {
 				 return accStr + `<th class="tdViewClass">` + ele + '</th>'
 			  },'<thead class="theadViewClass"><tr>' ) + '</tr></thead>';
 
+//console.log(inpArr)
 		return inpArr.reduce( (accStr, ele) => {
 			return accStr + auxCrearTr(ele)
 		},` <table class="tableViewClass ${auxClassJs}"><caption>${inpCaption}</caption>${auxTbTitulo}<tbody class="tbodyViewClass">` ) + '</tbody></table>';
