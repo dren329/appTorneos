@@ -2,7 +2,8 @@ const torneoModel = require("./torneo.model.js")
 
 const Torneo = {
 	ver: async (req, res) => {
-		const torneos = await torneoModel.find()
+		const { id } = req.params
+		const torneos = await torneoModel.find({ refEvento: id })
 		res.status(200).send(torneos)
 	},
 	verUnico: async  (req, res) => {
