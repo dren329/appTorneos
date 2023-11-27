@@ -1,0 +1,19 @@
+{
+  "name": "api-kriger-torneos",
+  "version": "1.0.0",
+  "description": "administrador de datos para torneos krigerskole",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "krigerskole",
+    "torneos"
+  ],
+  "author": "dren-JesusRafaelBernalMartinez",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.4.1"
+  }
+}
