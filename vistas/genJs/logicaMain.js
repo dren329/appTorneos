@@ -151,13 +151,44 @@ const auxVista = auxArrGrupos.reduce( (tablaFinal, grupo, i) =>{
 	auxDom.innerHTML = auxVista 
 }
 
+
+
+const timerCombate = () => {
+	let tiempo = 180
+	let intervalo
+
+	function vistaContador(auxTiempo){
+		const minutos = Math.floor(auxTiempo/60)
+		const segundos = auxTiempo % 60
+		document.querySelector("#pTemporizador").textContent = `${minutos}:${segundos}`
+	}
+
+	// document.querySelector("#btnInicio").addEventListener('click', 
+	function iniciar(){
+		intervalo = setInterval( function(){
+			tiempo--
+			console.log(tiempo)
+			
+			if(tiempo === 0){ fin() }
+			vistaContador(tiempo)
+		}, 1000)
+	}
+	
+	function pausar(){clearInterval(intervalo)}
+
+	function fin(){ alert('Ultimo Intercambio') }
+	
+	iniciar()
+}
+
 const logicaMain = {
 	auxCrearTabla,
 	addParticipante,
 	asignarGrupos,
 	crearTablaGrupos,
 	combatesGrupos,
-	verTodosCombatesGrupo
+	verTodosCombatesGrupo,
+	timerCombate
 }
 
 export default logicaMain

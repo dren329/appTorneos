@@ -7,7 +7,7 @@ const Torneo = mongoose.model('Torneo', {
 	tamGrupo: { type: Number, required: true},
 	participantes: { type: Array, default: [] },
 	grupos: { type: Array, default: [] },
-	Combates: { type: Array, default: [] },
+	combates: { type: Array, default: [] },
 	fecha: { type: Date, default: Date.now },
 })
 

@@ -56,6 +56,8 @@ const main = async () => {
 
 	app.put('/editarGruposTorneo/:id', torneo.editarGrupos)
 
+	app.put('/editarCombatesTorneo/:id', torneo.editarCombates)
+
 	app.delete('/eliminarTorneo/:id', torneo.eliminar)
 
 	// ----------- Participantes 

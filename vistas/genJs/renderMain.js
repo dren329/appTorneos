@@ -1,6 +1,54 @@
 import fetchMain from "./fetchMain.js"
 import logicaMain from "./logicaMain.js"
 
+function fnAuxVistaCombate(){
+	const auxVista = `
+	<section id="secCombate">
+		<div id="divContadorTiempo">
+			<p>Tiempo:</p>
+			<p id="pTemporizador">Iniciar</p>
+
+		</div>
+		<button type="button" id="btnDoble">Doble</button>
+		<div id="divParticipantes">
+			<div id="divParticipante1">
+				<div class="divPuntos">
+					<p>Puntos:</p>
+					<p id="pPuntosP1">3</p>
+				</div>
+				<button type="button" class="btnPuntos">+3 Puntos</button>
+				<button type="button" class="btnPuntos">+2 Puntos</button>
+				<button type="button" class="btnPuntos">+1 punto</button>
+				<button type="button" class="btnPuntos">Penalización</button>
+			</div>
+			<div id="divHistorialCombate">
+				<p>Historial:</p>
+				<div id="divAuxListahistorial">
+					<p class="pAccionCombate"> Azul +3 puntos </p>
+					<p class="pAccionCombate">1er Doble</p>
+					<p class="pAccionCombate">Rojo +3 puntos</p>
+					<p class="pAccionCombate">2do Doble</p>
+					<p class="pAccionCombate">Azul +1 punto</p>
+					<p class="pAccionCombate">Azul -1 punto</p>
+				</div>
+			</div>
+			<div id="divParticipante2">
+				<div class="divPuntos">
+					<p>Puntos:</p>
+					<p id="pPuntosP1">3</p>
+				</div>
+				<button type="button" class="btnPuntos">+3 Puntos</button>
+				<button type="button" class="btnPuntos">+2 Puntos</button>
+				<button type="button" class="btnPuntos">+1 punto</button>
+				<button type="button" class="btnPuntos">Penalización</button>
+			</div>
+		</div>
+	</section>
+	`
+	document.querySelector('#idVistaCentral').innerHTML = auxVista
+	logicaMain.timerCombate()
+}
+
 async function verTorneo(id){
 
 	const auxTorneo = await fetchMain.verTorneo(id)
@@ -37,8 +85,12 @@ async function verTorneo(id){
 	}
 
 	if(auxTorneo.grupos[0]){
-		crearTablaGrupos('#secVerTorneoLsGrupos', 'classClickCombates', auxTorneo.grupos)
+		logicaMain.crearTablaGrupos('#secVerTorneoLsGrupos', 'classClickCombates', auxTorneo.grupos)
 	} // Mostrar Tabla Grupos
+
+	 if(auxTorneo.combates){ 
+		logicaMain.verTodosCombatesGrupo(auxTorneo.combates, '#secVerTorneoLsCombates')
+	 } // Mostrar Tabla Combates
 }
 
 
@@ -110,8 +162,7 @@ async function editarTorneo(id){
 		<div id="btnsEditarTorneoMed">
 			<button type="button" id="btnOrganizarGrupos">Organizar grupos</button>
 			<button type="button" id="btnOrganizarCombates">Organizar combates</button>
-			<button type="button" id="btnGruposAceptar">Guardar Grupos</button>
-			<button type="button" id="btnCombatesAceptar">Guardar Combates</button>
+			<button type="button" id="btnGruposAceptar">Guardar Grupos / Combates</button>
 		</div>
 
 		<div id="divEditarTorneoMed">
@@ -122,12 +173,18 @@ async function editarTorneo(id){
 	`
 	document.querySelector('#idVistaCentral').innerHTML = auxTemplate
 	if(auxTorneo.participantes[0]){ // Mostrar Tabla Participantes
+
+
 	document.querySelector('#secEditarTorneoLsParticipantes').innerHTML = logicaMain.auxCrearTabla(auxTorneo.participantes, 'tblEditarTorneoParticipantes', 'Lista de Participantes:', Object.keys(auxTorneo.participantes[0]))
 	}
 
 	if(auxTorneo.grupos[0]){
 		logicaMain.crearTablaGrupos('#secEditarTorneoLsGrupos', 'classClickCombates', auxTorneo.grupos)
 	} // Mostrar Tabla Grupos
+
+	 if(auxTorneo.combates){ 
+		logicaMain.verTodosCombatesGrupo(auxTorneo.combates, '#secEditarTorneoLsCombates')
+	 } // Mostrar Tabla Combates
 
 	// -------------- Agregar fnBotones
 
@@ -148,32 +205,36 @@ async function editarTorneo(id){
 		})
 
 // console.log(auxTorneo.grupos)
-// console.log(auxTorneo.combates)
+ console.log(auxTorneo.combates)
 
-	 // auxTorneo.combates.map( ele => {console.log(ele); verTodosCombatesGrupo(ele , '#secEditarTorneoLsCombates')})
 	 logicaMain.verTodosCombatesGrupo(auxTorneo.combates, '#secEditarTorneoLsCombates')
 
 
-	const auxIrClickCombate = document.querySelectorAll('.tbCombate')
-	auxIrClickCombate.forEach( ele =>{
-		ele.addEventListener('click', () => {fnAuxVistaCombate()})
-	})
+		const auxIrClickCombate = document.querySelectorAll('.tbCombate')
+		auxIrClickCombate.forEach( ele =>{
+			ele.addEventListener('click', () => {fnAuxVistaCombate()})
+		})
 	}) // btnOrganizarGrupos
 
 
 	document.querySelector('#btnOrganizarCombates').addEventListener('click', () => {
-	console.log(auxTorneo)
-	auxTorneo.combates = fnCombatesGrupos([...auxTorneo.grupos])
-	verCombatesGrupo(auxTorneo.combates, '#secEditarTorneoLsGrupos')
+		auxTorneo.combates = auxTorneo.grupos.map( ele => {
+			return logicaMain.combatesGrupos(ele)
+		})
+		logicaMain.verTodosCombatesGrupo(auxTorneo.combates, '#secEditarTorneoLsCombates')
 
+		const auxIrClickCombate = document.querySelectorAll('.tbCombate')
+		auxIrClickCombate.forEach( ele =>{
+			ele.addEventListener('click', () => {fnAuxVistaCombate()})
+		})
 	})
 
 
 	document.querySelector('#btnGruposAceptar').addEventListener('click', (() => {
 			fetchMain.editarGruposTorneo(auxTorneo._id, auxTorneo.grupos)
+			fetchMain.editarCombatesTorneo(auxTorneo._id, auxTorneo.combates)
 		}))
 
-	document.querySelector('#btnCombatesAceptar').addEventListener('click', () => console.log('guardar'))
 
 }
 

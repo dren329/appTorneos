@@ -13,13 +13,27 @@ const fetchMain = {
 	},
 
 	editarGruposTorneo: async (idTorneo, grupos) => {
-		const resTorneo = await fetch(`/editarGruposTorneo/${idTorneo}`,{
+		const resGrupos = await fetch(`/editarGruposTorneo/${idTorneo}`,{
 			method: 'PUT',
 			body: JSON.stringify(grupos),
 			headers: {
 				'Content-Type': 'application/json'
 			}
 		})
+
+		return  resGrupos
+	},
+
+	editarCombatesTorneo: async (idTorneo, combates) => {
+		const resCombates = await fetch(`/editarCombatesTorneo/${idTorneo}`,{
+			method: 'PUT',
+			body: JSON.stringify(combates),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+	console.log(combates, resCombates)
+		return resCombates
 	},
 
 	verEventos: async () => {

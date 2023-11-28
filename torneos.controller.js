@@ -33,9 +33,14 @@ const Torneo = {
 	editarGrupos: async (req, res) => {
 		const {id} = req.params
 		const torneo = await torneoModel.findOne({ _id: id })
-		console.log(req.body)
 		torneo.grupos = [...req.body]
-		console.log(torneo)
+		await torneo.save()
+		res.status(204).send(torneo)
+	},
+
+	editarCombates: async (req, res) => {
+		const {id} = req.params
+		const torneo = await torneoModel.findOneAndUpdate({ _id: id }, {combates: [...req.body]})
 		await torneo.save()
 		res.status(204).send(torneo)
 	},
