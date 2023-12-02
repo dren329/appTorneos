@@ -3,6 +3,7 @@ import logicaMain from "./logicaMain.js"
 
 const fnAuxVistaCombate = async (idTorneo, idCombate) => {
 	const auxCombate = await  fetchMain.verCombate(idTorneo, idCombate)
+	console.log( auxCombate)
 	const auxVista = `
 	<section id="secCombate">
 		<div id="divContadorTiempo">
@@ -13,10 +14,9 @@ const fnAuxVistaCombate = async (idTorneo, idCombate) => {
 		<button type="button" id="btnDoble">Doble</button>
 		<div id="divParticipantes">
 			<div id="divParticipante1">
-				<p class="vsCombateNombrePart">${auxCombate.participante1}</p>
 				<div class="divPuntos">
 					<p>Puntos:</p>
-					<p id="pPuntosP1">${auxCombate.puntosP1}</p>
+					<p id="pPuntosP1">3</p>
 				</div>
 				<button type="button" class="btnPuntos">+3 Puntos</button>
 				<button type="button" class="btnPuntos">+2 Puntos</button>
@@ -35,10 +35,9 @@ const fnAuxVistaCombate = async (idTorneo, idCombate) => {
 				</div>
 			</div>
 			<div id="divParticipante2">
-				<p class="vsCombateNombrePart">${auxCombate.participante2}</p>
 				<div class="divPuntos">
 					<p>Puntos:</p>
-					<p id="pPuntosP1">${auxCombate.puntosP2}</p>
+					<p id="pPuntosP1">3</p>
 				</div>
 				<button type="button" class="btnPuntos">+3 Puntos</button>
 				<button type="button" class="btnPuntos">+2 Puntos</button>
@@ -48,8 +47,8 @@ const fnAuxVistaCombate = async (idTorneo, idCombate) => {
 		</div>
 	</section>
 	`
-	 document.querySelector('#idVistaCentral').innerHTML = auxVista
-	 logicaMain.timerCombate()
+	document.querySelector('#idVistaCentral').innerHTML = auxVista
+	logicaMain.timerCombate()
 }
 
 async function verTorneo(id){

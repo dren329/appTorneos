@@ -3,22 +3,21 @@ import fetchMain from "./fetchMain.js"
 const	auxCrearTr = (inpDataObj) => {
 		 const datosObjeto = Object.values(inpDataObj);
 		 let auxId =  ''
-		 if(inpDataObj.id){ auxId = inpDataObj.id.toString();}
 		 return datosObjeto.reduce( (accStr, ele) => {
 				 return accStr + `<td  class="tdViewClass">` + ele + '</td>'
-			  },`<tr auxId = ${ + auxId} class=" trViewClass">` ) + '</tr>';
+			  },`<tr  class=" trViewClass">` ) + '</tr>';
 }
 
 
 
-const auxCrearTabla = (inpArr, auxClassJs = '',inpCaption = '', inpArrTitulo = []) => {
+const auxCrearTabla = (inpArr, auxClassJs = '',inpCaption = '', inpArrTitulo = [], auxAttrs) => {
 
 		 const auxTbTitulo = inpArrTitulo.reduce( (accStr, ele) => {
 				 return accStr + `<th class="tdViewClass">` + ele + '</th>'
 			  },'<thead class="theadViewClass"><tr>' ) + '</tr></thead>';
 		return inpArr.reduce( (accStr, ele) => {
 			return accStr + auxCrearTr(ele)
-		},` <table class="tableViewClass ${auxClassJs}"><caption>${inpCaption}</caption>${auxTbTitulo}<tbody class="tbodyViewClass">` ) + '</tbody></table>';
+		},` <table class="tableViewClass ${auxClassJs}" ${auxAttrs}><caption>${inpCaption}</caption>${auxTbTitulo}<tbody class="tbodyViewClass">` ) + '</tbody></table>';
 		
 	}
 
@@ -115,7 +114,10 @@ const combatesGrupos = (inpArray) => {
 		inpArray2.shift()
 
 		const combatesParticipante = inpArray2.reduce( (acc2, iteP2) => {
-			acc2.push({p1:iteParticipante, p2: iteP2})
+			acc2.push({
+				participante1: iteParticipante.nombre,
+				participante2: iteP2.nombre,
+			})
 			return acc2
 		},[])
 		
@@ -128,19 +130,20 @@ const combatesGrupos = (inpArray) => {
 
 
 
-const verTodosCombatesGrupo = (auxArrGrupos, auxDomInp = '#idVistaCentral') => {
+const verTodosCombatesGrupo = (auxArrGrupos, idTorneo, auxDomInp = '#idVistaCentral', fnAuxVistaCombate) => {
 const auxDom = document.querySelector(auxDomInp)
 
 const auxVista = auxArrGrupos.reduce( (tablaFinal, grupo, i) =>{
 
 	const tablaGrupo = grupo.reduce( ( accTablaGrupo, combate, ic) =>{
-
+		const auxStrId = `auxid='${ combate._id }'`
+		
 		const auxObjToArr = [
-			{p1: combate.p1.nombre, p1puntos:1, p1dobles:2},
-			{p2: combate.p2.nombre, p2puntos:0, p2dobles:2}
+			{p1: combate.participante1, p1puntos: combate.puntosP1, p1Dobles: combate.dobles},
+			{p2: combate.participante2, p2puntos: combate.puntosP2, p2dobles: combate.dobles }
 		]
 
-		accTablaGrupo.push({tb: auxCrearTabla(auxObjToArr, 'tbCombate', '',['Nombre', 'puntos', 'dobles'] )})
+		accTablaGrupo.push({tb: auxCrearTabla(auxObjToArr, 'tbCombate', '',['Nombre', 'puntos', 'dobles'], auxStrId )})
 
 		return accTablaGrupo
 	}, [])
@@ -149,6 +152,11 @@ const auxVista = auxArrGrupos.reduce( (tablaFinal, grupo, i) =>{
 }, '')
 
 	auxDom.innerHTML = auxVista 
+
+	const auxIrClickCombate = document.querySelectorAll('.tbCombate')
+	auxIrClickCombate.forEach( ele =>{
+		ele.addEventListener('click', event  => {fnAuxVistaCombate(idTorneo, event.currentTarget.getAttribute('auxid'))}  )
+	})
 }
 
 
@@ -167,7 +175,6 @@ const timerCombate = () => {
 	function iniciar(){
 		intervalo = setInterval( function(){
 			tiempo--
-			console.log(tiempo)
 			
 			if(tiempo === 0){ fin() }
 			vistaContador(tiempo)

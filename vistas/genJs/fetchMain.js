@@ -25,15 +25,21 @@ const fetchMain = {
 	},
 
 	editarCombatesTorneo: async (idTorneo, combates) => {
-		const resCombates = await fetch(`/editarCombatesTorneo/${idTorneo}`,{
+		const resCombates = await fetch(`/guardarCombates/${idTorneo}`,{
 			method: 'PUT',
 			body: JSON.stringify(combates),
 			headers: {
 				'Content-Type': 'application/json'
 			}
 		})
-	console.log(combates, resCombates)
 		return resCombates
+	},
+
+	verCombate: async ( idTorneo, idCombate ) => {
+		const resCombate = await fetch(`/verCombate/${idTorneo}/${idCombate}`)
+		const jsonCombate = await resCombate.json()
+
+		return jsonCombate 
 	},
 
 	verEventos: async () => {

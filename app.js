@@ -17,6 +17,7 @@ const mongoose =require('mongoose')
 const evento = require('./evento.controller.js')
 const torneo = require('./torneos.controller.js')
 const participante = require('./participantes.controller.js')
+const combate = require('./combates.controller.js')
 
 const app = express()
 const port = 3000
@@ -72,6 +73,13 @@ const main = async () => {
 	app.patch('/editarPatchParticipante/:idTorneo/:idParticipante', participante.actualizar)
 
 	app.delete('/eliminarParticipante/:idTorneo/:idParticipante', participante.eliminar)
+
+	// ----------- Combates
+
+	app.get('/verCombates/:idTorneo', combate.ver)
+	app.get('/verCombate/:idTorneo/:idCombate', combate.verUnico)
+	app.put('/editarCombate/:idTorneo/:idCombate', combate.actualizar)
+	app.put('/guardarCombates/:idTorneo', combate.guardar)
 
 	// send html archivo
 
