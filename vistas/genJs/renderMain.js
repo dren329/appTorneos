@@ -7,49 +7,47 @@ const fnAuxVistaCombate = async (idTorneo, idCombate) => {
 	<section id="secCombate">
 		<div id="divContadorTiempo">
 			<p>Tiempo:</p>
-			<p id="pTemporizador">Iniciar</p>
-
+			<p id="pTemporizador">3:00</p>
+			<button type="button" id="btnIniciarCombate">Iniciar</button>
+			<button type="button" style="display: none;" id="btnTemporizador"> . </button>
 		</div>
-		<button type="button" id="btnDoble">Doble</button>
+		<button type="button" class="btnPuntos" value=0 auxHistorial="Doble" >Doble</button>
 		<div id="divParticipantes">
 			<div id="divParticipante1">
 				<p class="vsCombateNombrePart">${auxCombate.participante1}</p>
 				<div class="divPuntos">
 					<p>Puntos:</p>
-					<p id="pPuntosP1">${auxCombate.puntosP1}</p>
+					<p id="pPuntosP1" value=0 >${auxCombate.puntosP1}</p>
 				</div>
-				<button type="button" class="btnPuntos">+3 Puntos</button>
-				<button type="button" class="btnPuntos">+2 Puntos</button>
-				<button type="button" class="btnPuntos">+1 punto</button>
-				<button type="button" class="btnPuntos">Penalización</button>
+				<button type="button" class="btnPuntos" value=3 auxparticipante="P1"  auxHistorial="Azul +3 Puntos" >+3 Puntos</button>
+				<button type="button" class="btnPuntos" value=2 auxparticipante="P1"  auxHistorial="Azul +2 Puntos" >+2 Puntos</button>
+				<button type="button" class="btnPuntos" value=1 auxparticipante="P1"  auxHistorial="Azul +1 Puntos" >+1 punto</button>
+				<button type="button" class="btnPuntos" value=-1 auxparticipante="P1"  auxHistorial="Azul -1 Puntos" >Penalización</button>
 			</div>
 			<div id="divHistorialCombate">
 				<p>Historial:</p>
-				<div id="divAuxListahistorial">
-					<p class="pAccionCombate"> Azul +3 puntos </p>
-					<p class="pAccionCombate">1er Doble</p>
-					<p class="pAccionCombate">Rojo +3 puntos</p>
-					<p class="pAccionCombate">2do Doble</p>
-					<p class="pAccionCombate">Azul +1 punto</p>
-					<p class="pAccionCombate">Azul -1 punto</p>
+				<div id="divListaHistorial">
+					<p class="pAccionCombate"> Comienzo </p>
 				</div>
 			</div>
 			<div id="divParticipante2">
 				<p class="vsCombateNombrePart">${auxCombate.participante2}</p>
 				<div class="divPuntos">
 					<p>Puntos:</p>
-					<p id="pPuntosP1">${auxCombate.puntosP2}</p>
+					<p id="pPuntosP2" value=0 >${auxCombate.puntosP2}</p>
 				</div>
-				<button type="button" class="btnPuntos">+3 Puntos</button>
-				<button type="button" class="btnPuntos">+2 Puntos</button>
-				<button type="button" class="btnPuntos">+1 punto</button>
-				<button type="button" class="btnPuntos">Penalización</button>
+				<button type="button" class="btnPuntos" value=3 auxparticipante="P2" auxHistorial="Rojo +3 Puntos" >+3 Puntos</button>
+				<button type="button" class="btnPuntos" value=2 auxparticipante="P2"  auxHistorial="Rojo +2 Puntos" >+2 Puntos</button>
+				<button type="button" class="btnPuntos" value=1 auxparticipante="P2"  auxHistorial="Rojo +1 Puntos" >+1 punto</button>
+				<button type="button" class="btnPuntos" value=-1 auxparticipante="P2"  auxHistorial="Rojo -1 Puntos" >Penalización</button>
 			</div>
 		</div>
 	</section>
 	`
 	 document.querySelector('#idVistaCentral').innerHTML = auxVista
-	 logicaMain.timerCombate()
+	 document.querySelector('#btnIniciarCombate').addEventListener('click', (event) => { logicaMain.timerCombate(event.currentTarget) } )
+	 const auxBtnAddPuntos = document.querySelectorAll('.btnPuntos')
+	 auxBtnAddPuntos.forEach( ele => ele.addEventListener('click', event => logicaMain.addPuntajeCombate(event.currentTarget) ) )
 }
 
 async function verTorneo(id){

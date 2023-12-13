@@ -42,6 +42,9 @@ const fetchMain = {
 		return jsonCombate 
 	},
 
+	editCombatePuntaje: async ( idTorneo, idCombate ) => {
+	},
+
 	verEventos: async () => {
 		const resEventos = await fetch('/verEventos')
 		const jsonEventos = await resEventos.json()

@@ -161,9 +161,14 @@ const auxVista = auxArrGrupos.reduce( (tablaFinal, grupo, i) =>{
 
 
 
-const timerCombate = () => {
+const timerCombate = (btn) => {
+	btn.remove()
+console.log('aciutivadoTimer')
 	let tiempo = 180
+	let tiempoRestante = 0
 	let intervalo
+	const btnControl = document.querySelector("#btnTemporizador")
+	btnControl.style.display = 'block'
 
 	function vistaContador(auxTiempo){
 		const minutos = Math.floor(auxTiempo/60)
@@ -172,20 +177,75 @@ const timerCombate = () => {
 	}
 
 	// document.querySelector("#btnInicio").addEventListener('click', 
-	function iniciar(){
+	function iniciar(event){
 		intervalo = setInterval( function(){
 			tiempo--
 			
 			if(tiempo === 0){ fin() }
 			vistaContador(tiempo)
 		}, 1000)
+
+		btnControl.innerText = 'Pausar'
+		btnControl.removeEventListener('click', iniciar)
+		btnControl.addEventListener('click', pausar)
 	}
 	
-	function pausar(){clearInterval(intervalo)}
+	function pausar(event){
+		clearInterval(intervalo)
+		btnControl.innerText = 'Reanudar'
+		btnControl.removeEventListener('click', pausar)
+		btnControl.addEventListener('click', iniciar )
+	}
 
-	function fin(){ alert('Ultimo Intercambio') }
+	function fin(){ 
+		clearInterval(intervalo)
+		console.log('finalizado')
+	}
+
 	
 	iniciar()
+}
+
+const addPuntajeCombate = (trg) => {
+	const domHistorial = document.querySelector('#divListaHistorial')
+	const strHistorial = trg.getAttribute('auxhistorial')
+	const participante = trg.getAttribute('auxparticipante')
+	const valorPunto = trg.value
+	const pPuntaje = document.querySelector(`#pPuntos${participante}`)
+
+	const puntajeToAdd = parseInt(pPuntaje.getAttribute('value')) + parseInt(valorPunto)
+	pPuntaje.innerText = puntajeToAdd
+	pPuntaje.setAttribute('value', puntajeToAdd)
+
+	const auxDivDom = document.createElement('div')
+	const auxPDom = document.createElement('p')
+	auxDivDom.classList.add('pAccionCombate')
+	const auxTexto = document.createTextNode(strHistorial)
+
+	const auxBtnEliminar = document.createElement('button')
+	auxBtnEliminar.setAttribute('type', 'button')
+	auxBtnEliminar.classList.add('btnEliminarAccionCombate')
+	auxBtnEliminar.setAttribute('value', parseInt(valorPunto))
+	auxBtnEliminar.innerHTML = 'X'
+
+	auxDivDom.appendChild(auxTexto)
+	auxDivDom.appendChild(auxBtnEliminar)
+	domHistorial.appendChild(auxDivDom)
+
+	auxBtnEliminar.addEventListener('click', () => { 
+		const puntajeActualizado = parseInt(pPuntaje.getAttribute('value')) - parseInt(auxBtnEliminar.value)
+		pPuntaje.innerText = puntajeActualizado 
+		pPuntaje.setAttribute('value',  puntajeActualizado)
+		auxDivDom.remove() 
+	} )
+}
+
+const guardarCombate = () => {
+	const puntajeP1 = document.querySelector('pPuntajeP1')
+	const puntajeP2 = document.querySelector('pPuntajeP2')
+	const arrDomHistorial = document.querySelectorAll('.pAccionCombate')
+	const arrHistorial = arrDomHistorial.map( ele => ele.innerText )
+
 }
 
 const logicaMain = {
@@ -195,7 +255,8 @@ const logicaMain = {
 	crearTablaGrupos,
 	combatesGrupos,
 	verTodosCombatesGrupo,
-	timerCombate
+	timerCombate,
+	addPuntajeCombate
 }
 
 export default logicaMain
