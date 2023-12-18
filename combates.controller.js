@@ -41,7 +41,11 @@ const Combate = {
 	actualizar: async ( req, res ) => {
 		const { idTorneo, idCombate } = req.params
 		const auxTorneo = await torneoModel.findOne({ _id: idTorneo })
-		const combate = auxTorneo.combates.find( iteCombate => iteCombate._id == idCombate )
+		const combate = (auxTorneo.combates.flat()).find( iteCombate => 
+			{
+				return (iteCombate._id).toString() == idCombate 
+			})
+		console.log(combate)
 
 		const combateActualizado = Object.assign( combate, req.body )
 		await torneoModel.replaceOne({ _id: idTorneo }, auxTorneo )

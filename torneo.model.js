@@ -4,6 +4,7 @@ const Torneo = mongoose.model('Torneo', {
 	nombreTorneo: { type: String, required: true},
 	refEvento: { type:String,  required: true},
 	estado: { type: String, default: 'organizacion' },
+	numeroParticipantes: { type: Number, default: 0 },
 	tamGrupo: { type: Number, required: true},
 	participantes: { type: Array, default: [] },
 	grupos: { type: Array, default: [] },

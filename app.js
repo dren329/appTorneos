@@ -100,4 +100,4 @@ const main = async () => {
 
 }
 
-main().catch(err => {console.log})
+main().catch(err => {console.log(err)})

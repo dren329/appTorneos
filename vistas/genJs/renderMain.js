@@ -3,6 +3,11 @@ import logicaMain from "./logicaMain.js"
 
 const fnAuxVistaCombate = async (idTorneo, idCombate) => {
 	const auxCombate = await  fetchMain.verCombate(idTorneo, idCombate)
+	const auxObjCombate = {
+		participante1: auxCombate.participante1,
+		participante2: auxCombate.participante2,
+		inicio: null,
+	}
 	const auxVista = `
 	<section id="secCombate">
 		<div id="divContadorTiempo">
@@ -14,7 +19,7 @@ const fnAuxVistaCombate = async (idTorneo, idCombate) => {
 		<button type="button" class="btnPuntos" value=0 auxHistorial="Doble" >Doble</button>
 		<div id="divParticipantes">
 			<div id="divParticipante1">
-				<p class="vsCombateNombrePart">${auxCombate.participante1}</p>
+				<p id="nombreP1" class="vsCombateNombrePart">${auxCombate.participante1}</p>
 				<div class="divPuntos">
 					<p>Puntos:</p>
 					<p id="pPuntosP1" value=0 >${auxCombate.puntosP1}</p>
@@ -42,12 +47,19 @@ const fnAuxVistaCombate = async (idTorneo, idCombate) => {
 				<button type="button" class="btnPuntos" value=-1 auxparticipante="P2"  auxHistorial="Rojo -1 Puntos" >Penalización</button>
 			</div>
 		</div>
+
+		<button type="button" id="btnFinalizarCombate" disabled>Finalizar</button>
 	</section>
 	`
 	 document.querySelector('#idVistaCentral').innerHTML = auxVista
-	 document.querySelector('#btnIniciarCombate').addEventListener('click', (event) => { logicaMain.timerCombate(event.currentTarget) } )
+	 document.querySelector('#btnIniciarCombate').addEventListener('click', (event) => { 
+		 logicaMain.timerCombate(event.currentTarget) 
+		 auxObjCombate.inicio = Date.now()
+		 document.querySelector('#btnFinalizarCombate').disabled = false
+		 } )
 	 const auxBtnAddPuntos = document.querySelectorAll('.btnPuntos')
 	 auxBtnAddPuntos.forEach( ele => ele.addEventListener('click', event => logicaMain.addPuntajeCombate(event.currentTarget) ) )
+	 document.querySelector('#btnFinalizarCombate').addEventListener('click', () => logicaMain.guardarCombate(auxObjCombate, idTorneo, idCombate) )
 }
 
 async function verTorneo(id){
@@ -249,6 +261,8 @@ async function editarTorneo(id){
 			  },`<tr auxId = ${ + auxId} class=" trViewClass">` ) + '</tr>';
 	  };
 
+// --------------- logicaTorneos
+
 async function verTorneos(idEvento){
 	const arrTorneos = await fetchMain.verTorneos(idEvento);
 	const auxDom = document.querySelector('#divEventoTorneos');
@@ -282,13 +296,20 @@ function crearEvento(){
 						<input id="sedeEvento" name="sedeEvento" placeholder="Sede del Evento" />
 					</div>
 
+					<button type="sumbit" id="btnFormCrearEvento">Crear</button>
 				</form>
+
+				<div id="divCrearTorneo"></div>
 			</div>
 	`
 
 	auxDom.innerHTML = auxHtml
 
-}	
+	document.querySelector('#btnFormCrearEvento').addEventListener( 'click', logicaMain.crearEvento )
+
+}
+
+
 
 async function verEventos(){
 	const eventos = await fetchMain.verEventos()

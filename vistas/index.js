@@ -25,31 +25,6 @@ function fnAuxAddEditarTorneoFunctions(auxIdTorneo){
 
 
 // Creacion de Torneos, estructuras
-function fnBtnCrearTorneo(){
-	const auxVista = `
-		<section id="secCrearTorneo">
-			<form id="formCrearTorneo">
-			 <div class="parInpt">
-				 <label for="nombreTorneo">Nombre del Torneo: </label>
-				 <input id="nombreTorneo" name="nombreTorneo" placeholder="Nombre" />
-			 </div>
-
-			 <div class="parInpt">
-				 <label for="tamGrupo">Tamaño de Grupo: </label>
-				 <input type="number" id="tamGrupo" name="tamGrupo" placeholder="Tamaño del Grupo" />
-			 </div>
-
-			 <div class="parBtnAceCan">
-			  <button type="button" class="btnCancelar">Cancelar</button>
-			  <button type="submit" id="btnAceptarCrearTorneo" class="btnAceptar">Aceptar</button>
-			 </div>
-			</form>
-
-		</section>
-	`
-	document.querySelector('#idVistaCentral').innerHTML = auxVista
-	document.querySelector('#btnAceptarCrearTorneo').addEventListener('click',()=> crearTorneo())
-}
 
 // -----------------------comFetch
 async function fetchTorneo(idTorneo){
@@ -79,59 +54,6 @@ async function fetchGuardarGrupos(idTorneo, prmGrupos){
 		}
 	})
 }
-
-function crearTorneo(){
-	const formTorneo = document.querySelector('#formCrearTorneo')
-	formTorneo.onsubmit = async (e) => {
-		e.preventDefault()
-		const auxDataTorneo = new FormData(formTorneo)
-		const dataTorneo = Object.fromEntries(auxDataTorneo.entries())
-		await fetch('/crearTorneo', {
-			method: 'POST',
-			body: JSON.stringify(dataTorneo),
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		})
-
-		formTorneo.reset()
-	}
-/*
-
-
-			 <fieldset class="fieldset">
-				 <legend>Estilo de Puntaje</legend>
-				  <div class="parInpRadio">
-					<input type="radio" id="inpTorneoTipoCombates" name="tipoPuntaje" value="combates" />
-					<label for="inpTorneoTipoCombates">Combates</label>
-				  </div>
-				  <div class="parInpRadio">
-					<input type="radio" id="inpTorneoTipoPuntos" name="tipoPuntaje" value="puntos" />
-					<label for="inpTorneoTipoPuntos">Puntos </label>
-				  </div>
-			 </fieldset>
-
- const nombreTorneo = document.querySelector('#nombreTorneo').value
- const tamGrupo = document.querySelector('#tamGrupo').value
- const tipoPuntaje = document.querySelector('input[name="tipoPuntaje"]:checked').value
- if(!nombreTorneo || !tamGrupo || !tipoPuntaje){return alert('llenar todos los campos / verifique que los sea un dato coherente')}
- if(isNaN(tamGrupo)){ return alert('el tamaño de grupo debe ser un numero')}
-	lsTorneos.push(
-		{
-		 id: lsTorneos.lenght + 1,
-		 nombreTorneo,
-		 tamGrupo,
-		 estado: 'organizacion',
-		 tipoPuntaje,
-		 lsParticipantes: [],
-		 grupos: [],
-		 combates: [],
-		},
-		)
-	verTorneos(lsTorneos)
-	*/
-}
-
 
 function btnAddParticipante(){
 	const auxTemplate = `
@@ -187,16 +109,7 @@ function btnAddParticipante(){
 	//Crear evento
 
 document.querySelector('#btnCrearEvento').addEventListener('click', ()=> renderMain.crearEvento() )
-
-document.querySelector('#btnCrearTor').addEventListener('click', ()=> fnBtnCrearTorneo() )
-
-document.querySelector('#btnVerTor').addEventListener('click', ()=> verTorneos( fetchTorneos() ) )
-
-
 document.querySelector('#btnAddParticipante').addEventListener('click', ()=> btnAddParticipante() )
-
-
-document.querySelector('#btnCrVerCombates').addEventListener('click', ()=> verCombatesGrupo() )
 
 
 window.onload = () =>{

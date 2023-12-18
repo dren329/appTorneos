@@ -22,6 +22,89 @@ const auxCrearTabla = (inpArr, auxClassJs = '',inpCaption = '', inpArrTitulo = [
 	}
 
 
+// ---------------- logicaTorneos
+
+
+function crearTorneo(e){
+	const refEvento = e.currentTarget.idEvento
+	
+	const formTorneo = document.querySelector('#formCrearTorneo')
+	formTorneo.onsubmit = async (e) => {
+		e.preventDefault()
+
+		const nombreTorneo = document.querySelector('#nombreTorneo').value
+		const numeroParticipantes = document.querySelector('#numeroParticipantes').value
+		const tamGrupo = document.querySelector('#tamGrupo').value
+		
+		const dataTorneo = {
+			refEvento,
+			nombreTorneo,
+			numeroParticipantes,
+			tamGrupo,
+		}
+		console.log(dataTorneo )
+		fetchMain.crearTorneo(dataTorneo)
+
+		formTorneo.reset()
+	}
+}
+
+function renderCrearTorneo(idEvento){
+	const auxVista = `
+		<section id="secCrearTorneo">
+			<form id="formCrearTorneo">
+			 <div class="parInpt">
+				 <label for="nombreTorneo">Nombre del Torneo: </label>
+				 <input id="nombreTorneo" name="nombreTorneo" placeholder="Nombre" required />
+			 </div>
+
+			 <div class="parInpt">
+				 <label for="numeroParticipantes">Numero de participantes:  </label>
+				 <input type="number" id="numeroParticipantes" name="numeroParticipantes" placeholder="# Participantes" required/>
+			 </div>
+
+			 <div class="parInpt">
+				 <label for="tamGrupo">Tamaño de Grupo: </label>
+				 <input type="number" id="tamGrupo" name="tamGrupo" placeholder="Tamaño del Grupo" required />
+			 </div>
+
+			 <div class="parBtnAceCan">
+			  <button type="button" class="btnCancelar">Cancelar</button>
+			  <button type="submit" id="btnAceptarCrearTorneo" class="btnAceptar">Aceptar</button>
+			 </div>
+			</form>
+
+		</section>
+	`
+	document.querySelector('#divCrearTorneo').innerHTML = auxVista
+	const auxAceptarBtn = document.querySelector('#btnAceptarCrearTorneo')
+	auxAceptarBtn.idEvento = idEvento
+	auxAceptarBtn.addEventListener('click', crearTorneo )
+}
+
+// ---------------- ctrEventos
+
+const crearEvento = (event) => {
+	const formEvento = document.querySelector('#formCrearEvento')
+	formEvento.onsubmit = async (event) => {
+		event.preventDefault()
+		const nombreEvento = document.querySelector('#nombreEvento').value
+		const fechaEvento = document.querySelector('#fechaEvento').value
+		const sedeEvento = document.querySelector('#sedeEvento').value
+
+		const objEvento = {
+			eventoNombre: nombreEvento,
+			eventoFecha: fechaEvento,
+			eventoSede: sedeEvento
+		}
+
+		const resFetchEvento = await fetchMain.crearEvento(objEvento)
+		
+		renderCrearTorneo(resFetchEvento)
+	}
+
+}
+
 	const addParticipante = (auxIdTorneo)=> {
 		
 	console.log(auxIdTorneo)
@@ -219,8 +302,9 @@ const addPuntajeCombate = (trg) => {
 
 	const auxDivDom = document.createElement('div')
 	const auxPDom = document.createElement('p')
-	auxDivDom.classList.add('pAccionCombate')
+	auxPDom.classList.add('pAccionCombate')
 	const auxTexto = document.createTextNode(strHistorial)
+	auxPDom.appendChild(auxTexto)
 
 	const auxBtnEliminar = document.createElement('button')
 	auxBtnEliminar.setAttribute('type', 'button')
@@ -228,7 +312,7 @@ const addPuntajeCombate = (trg) => {
 	auxBtnEliminar.setAttribute('value', parseInt(valorPunto))
 	auxBtnEliminar.innerHTML = 'X'
 
-	auxDivDom.appendChild(auxTexto)
+	auxDivDom.appendChild(auxPDom)
 	auxDivDom.appendChild(auxBtnEliminar)
 	domHistorial.appendChild(auxDivDom)
 
@@ -240,23 +324,34 @@ const addPuntajeCombate = (trg) => {
 	} )
 }
 
-const guardarCombate = () => {
-	const puntajeP1 = document.querySelector('pPuntajeP1')
-	const puntajeP2 = document.querySelector('pPuntajeP2')
-	const arrDomHistorial = document.querySelectorAll('.pAccionCombate')
+const guardarCombate = (paramObjCombate, idTorneo, idCombate) => {
+	const objCombate = {}
+	const puntajeP1 = parseInt(document.querySelector('#pPuntosP1').getAttribute('value') )
+	const puntajeP2 = parseInt(document.querySelector('#pPuntosP2').getAttribute('value') )
+	const arrDomHistorial = Array.from( document.querySelectorAll('.pAccionCombate') )
 	const arrHistorial = arrDomHistorial.map( ele => ele.innerText )
+
+	Object.assign(objCombate,
+		paramObjCombate,
+		{ puntosP1: puntajeP1 },
+		{ puntosP2: puntajeP2 },
+		{ historial: arrHistorial }
+	)
+	fetchMain.finalizarCombate(idTorneo, idCombate, objCombate)
 
 }
 
 const logicaMain = {
 	auxCrearTabla,
+	crearEvento,
 	addParticipante,
 	asignarGrupos,
 	crearTablaGrupos,
 	combatesGrupos,
 	verTodosCombatesGrupo,
 	timerCombate,
-	addPuntajeCombate
+	addPuntajeCombate,
+	guardarCombate,
 }
 
 export default logicaMain
