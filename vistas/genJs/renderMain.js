@@ -300,6 +300,8 @@ function crearEvento(){
 				</form>
 
 				<div id="divCrearTorneo"></div>
+				<div id="divTorneosCreados"></div>
+				<div id="divAddParticipanteEvento"></div>
 			</div>
 	`
 

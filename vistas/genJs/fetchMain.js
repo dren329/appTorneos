@@ -90,15 +90,28 @@ const fetchMain = {
 		return jsonEventos
 	},
 
-	addParticipante: async (idTorneo, dataParticipante) =>{
-		const res = await fetch(`/crearParticipante/${idTorneo}`, {
+	addParticipanteEvento: async (idEvento, dataParticipante) =>{
+		const res = await fetch(`/crearParticipanteEvento/${idEvento}`, {
 			method: 'POST',
 			body: JSON.stringify(dataParticipante),
 			headers: {
 				'Content-Type': 'application/json'
 			}
 		})
-		return res
+		const jsonParticipante = await res.json()
+		return jsonParticipante
+	},
+
+	addParticipanteTorneo: async (idTorneo, dataParticipante) =>{
+		const res = await fetch(`/crearParticipanteTorneo/${idTorneo}`, {
+			method: 'POST',
+			body: JSON.stringify(dataParticipante),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+		const jsonParticipante = await res.json()
+		return jsonParticipante
 	},
 
 	//

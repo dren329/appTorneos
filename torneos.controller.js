@@ -14,7 +14,11 @@ const Torneo = {
 	crear: async (req, res) => {
 		const torneo = new torneoModel(req.body)
 		const torneoGuardado = await torneo.save()
-		res.status(201).send(torneoGuardado._id)
+		const auxRes = {
+			id: torneoGuardado._id,
+			nombre: torneoGuardado.nombreTorneo
+		}
+		res.status(201).send(auxRes)
 	},
 	actualizar: async ( req, res) => {
 		const { id } = req.params

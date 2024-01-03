@@ -66,7 +66,8 @@ const main = async () => {
 
 	app.get('/verParticipante/:idTorneo/:idParticipante', participante.verUnico)
 
-	app.post('/crearParticipante/:idTorneo', participante.crear)
+	app.post('/crearParticipanteEvento/:idEvento', participante.crearEvento)
+	app.post('/crearParticipanteTorneo/:idTorneo', participante.crearTorneo)
 
 	app.put('/editarParticipante/:idTorneo/:idParticipante', participante.actualizar)
 

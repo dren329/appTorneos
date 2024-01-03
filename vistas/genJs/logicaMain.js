@@ -21,12 +21,147 @@ const auxCrearTabla = (inpArr, auxClassJs = '',inpCaption = '', inpArrTitulo = [
 		
 	}
 
+// ---------------- logicaParticipantes
+
+
+const addParticipante = async () => {
+	const idRef = event.currentTarget.idRef
+	const addTarget = event.currentTarget.referencia
+	let response = null
+    
+    const auxNombrePart = document.querySelector('#inpParticipanteNombre').value
+    let escuela = document.querySelector('input[name="escuela"]:checked').value
+
+	if(!escuela){
+		escuela = document.querySelector('#inpOtraEscuela').value
+
+     	}
+
+    const dataParticipante = { nombre: auxNombrePart , escuela: escuela, puntos: 0, dobles: 0, ganados: 0, perdidos: 0 }
+
+	if(addTarget === 'evento'){
+		response =  await fetchMain.addParticipanteEvento(idRef, dataParticipante)
+	}
+
+	if(addTarget === 'torneo'){
+		response = await fetchMain.addParticipanteTorneo(idRef, dataParticipante)
+	}
+    console.log(response)
+
+}	
+
+function renderAddParticipante(idEvento){
+	
+	const auxTemplate = `
+			<section id="secAddParticipante">
+				<form id="formAddParticipante">
+				 <div class="parInpt">
+					 <label for="inpParticipanteNombre">Nombre del Participante: </label>
+					 <input id="inpParticipanteNombre" placeholder="Nombre" />
+				 </div>
+
+				 <fieldset class="fieldset">
+					 <legend>Escuela</legend>
+					  <div class="parInpRadio">
+						<input type="radio" id="inpRadioKrigerskole" name="escuela" value="krigerskole" />
+						<label for="inpRadioKrigerskole">Krigerskole</label>
+					  </div>
+					  <div class="parInpRadio">
+						<input type="radio" id="inpRadioScorpius" name="escuela" value="scorpius" />
+						<label for="inpRadioScorpius">Scorpius</label>
+					  </div>
+					  <div class="parInpRadio">
+						<input type="radio" id="inpRadioOtraEscuela" name="escuela" value="null" />
+						<label for="inpRadioOtraEscuela">Otro: </label>
+						<input id="inpOtraEscuela" placeholder="Ingresar Nombre de Escuela"/>
+					  </div>
+				 </fieldset>
+
+				 <div class="divChecks">
+				 	<fieldset class="fieldset divChecksTorneos"></fieldset>
+				 </div>
+
+				 <div class="parBtnAceCan">
+				  <button type="button" class="btnCancelar">Cancelar</button>
+				  <button type="button" id="btnAddParticipanteAceptar" class="btnAceptar">Aceptar</button>
+				 </div>
+				</form>
+
+			</section>
+
+			<br/>
+			<br/>
+			<br/>
+				 <div class="divChecks">
+				 	<p>ParticipantesGenericosPrueba: </p>
+				 	<fieldset class="fieldset divChecksTorneos"></fieldset>
+				 </div>
+	`
+	document.querySelector('#divAddParticipanteEvento').innerHTML = auxTemplate
+
+	const btnAddParticipante = document.querySelector('#btnAddParticipanteAceptar')
+	btnAddParticipante.idRef = idEvento
+	btnAddParticipante.referencia = 'evento'
+	btnAddParticipante.addEventListener('click', addParticipante )
+}
 
 // ---------------- logicaTorneos
 
 
+const renderTorneoCreado = async ( paramCreadoTorneo ) => {
+	const creadoTorneo = await paramCreadoTorneo
+	const divRenderTorneos = document.querySelector('#divTorneosCreados')
+	const torneosCreados = Array.from( document.querySelectorAll('.pTorneoCreado') )
+
+	const domChecksAddParticipante = Array.from(document.querySelectorAll('.divChecksTorneos'))
+
+	const auxPVista = (refTorneo) => `<p class="pTorneoCreado" auxid="${refTorneo.id}" > ${refTorneo.nombre} </p>`
+	const fnTorneoCheckbox = (refTorneo, i, ii) => `
+		  <div class="parInpCheckbox">
+			  <label for="inpCheck${i}Torneo${ii}">
+			  <input type="checkbox" id="inpCheck${i}Torneo${ii}" name="addParticipanteTorneo" value="${refTorneo.id}"/>${refTorneo.nombre} 
+			  </label>
+
+		  </div>
+	`
+
+	if(torneosCreados.length == 0 ){
+		const auxVista = auxPVista(creadoTorneo)
+		divRenderTorneos.innerHTML = auxVista
+		domChecksAddParticipante.forEach( (ele,i) => ele.innerHTML = fnTorneoCheckbox(creadoTorneo, i, 0))
+	}
+
+	if( torneosCreados.length > 0 ){
+		const arrayObjTorneo = torneosCreados.map( ite => {
+			const objTorneo = {
+				id: ite.getAttribute('auxid').toString(),
+				nombre: ite.innerText
+			}
+			return objTorneo
+		})
+
+		 const reduceVistaTorneos = arrayObjTorneo.reduce(
+			 (acc, ite) => {
+				return acc.concat( auxPVista(ite) )
+			 }
+		 ,'')
+
+		 const reduceVistaAddParticipanteChecks = (iteParam) => { return arrayObjTorneo.reduce( 
+		 	(acc, ite, i) => {
+				return acc.concat(fnTorneoCheckbox(ite, iteParam, i))
+			}
+		 ,'<legend>Seleccionar Torneos: </legend>') }
+
+		 const auxVista = reduceVistaTorneos + auxPVista(creadoTorneo)
+
+		 divRenderTorneos.innerHTML = auxVista
+		 domChecksAddParticipante.forEach( (ele, i) => ele.innerHTML = reduceVistaAddParticipanteChecks(i) + fnTorneoCheckbox(creadoTorneo, i, arrayObjTorneo.length) )
+		}
+}
+ 
 function crearTorneo(e){
 	const refEvento = e.currentTarget.idEvento
+	const auxDomAddP = document.querySelector('#divAddParticipanteEvento')
 	
 	const formTorneo = document.querySelector('#formCrearTorneo')
 	formTorneo.onsubmit = async (e) => {
@@ -42,12 +177,15 @@ function crearTorneo(e){
 			numeroParticipantes,
 			tamGrupo,
 		}
-		console.log(dataTorneo )
-		fetchMain.crearTorneo(dataTorneo)
+		const resTorneo = fetchMain.crearTorneo(dataTorneo)
 
 		formTorneo.reset()
+
+		renderTorneoCreado(resTorneo)
+		// renderAddParticipante(refEvento, resTorneo)
 	}
 }
+
 
 function renderCrearTorneo(idEvento){
 	const auxVista = `
@@ -101,33 +239,10 @@ const crearEvento = (event) => {
 		const resFetchEvento = await fetchMain.crearEvento(objEvento)
 		
 		renderCrearTorneo(resFetchEvento)
+		renderAddParticipante(resFetchEvento)
 	}
 
 }
-
-	const addParticipante = (auxIdTorneo)=> {
-		
-	console.log(auxIdTorneo)
-		const auxNombrePart = document.querySelector('#inpParticipanteNombre').value
-		const escuela = document.querySelector('input[name="escuela"]:checked').value
-
-		const dataParticipante = { nombre: auxNombrePart , escuela: escuela, puntos: 0, dobles: 0, ganados: 0, perdidos: 0 }
-		console.log(dataParticipante)
-
-		const resFetch = fetchMain.addParticipante(auxIdTorneo, dataParticipante)
-		console.log(resFetch)
-
-return
-		if(auxIdTorneo || (auxIdTorneo == 0)){
-			const auxIndex = lsTorneos.findIndex( ({id}) => id == auxIdTorneo )
-			lsTorneos[auxIndex].participantes.push(auxDataParticipante)
-
-
-		document.querySelector('#secEditarTorneoLsParticipantes').innerHTML = auxCrearTabla(lsTorneos[auxIndex].participantes, 'tblEditarTorneoParticipantes', 'Lista de Participantes:', Object.keys(lsTorneos[auxIndex].participantes[0]))
-		}
-
-	}	
-
 
 	const asignarGrupos = (inparrparticipantes, tamgrupo) => { 
 		const lsgrupos = []
